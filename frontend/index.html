@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RentaFácil – Gestión de Flota</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+    <header>
+        <h1>🚗 RentaFácil</h1>
+        <p>Sistema de Gestión de Flota</p>
+    </header>
+
+    <main>
+
+        <!-- ══════════════════════════════════════════
+             SECCIÓN 1 — Crear vehículo
+        ═══════════════════════════════════════════ -->
+        <section class="card">
+            <h2>➕ Crear Vehículo</h2>
+            <form id="formCrear">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="modelo">Modelo *</label>
+                        <input type="text" id="modelo" placeholder="Ej: Toyota Corolla 2024" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoría *</label>
+                        <input type="text" id="categoria" placeholder="Ej: Sedán, SUV, Pickup" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="precioPorDia">Precio por Día (USD) *</label>
+                        <input type="number" id="precioPorDia" placeholder="Ej: 45.00" step="0.01" min="0.01" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="unidadesDisponibles">Unidades Disponibles *</label>
+                        <input type="number" id="unidadesDisponibles" placeholder="Ej: 5" min="0" required />
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="descripcion">Descripción (opcional)</label>
+                        <textarea id="descripcion" rows="2" placeholder="Descripción del vehículo (máx. 255 caracteres)" maxlength="255"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Crear Vehículo</button>
+            </form>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECCIÓN 2 — Buscar por ID
+        ═══════════════════════════════════════════ -->
+        <section class="card">
+            <h2>🔍 Buscar por ID</h2>
+            <div class="inline-form">
+                <input type="number" id="buscarId" placeholder="ID del vehículo" min="1" />
+                <button onclick="buscarPorId()" class="btn btn-secondary">Buscar</button>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECCIÓN 3 — Actualizar vehículo
+        ═══════════════════════════════════════════ -->
+        <section class="card">
+            <h2>✏️ Actualizar Vehículo</h2>
+            <form id="formActualizar">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="actualizarId">ID del Vehículo *</label>
+                        <input type="number" id="actualizarId" placeholder="ID a actualizar" min="1" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarModelo">Modelo *</label>
+                        <input type="text" id="actualizarModelo" placeholder="Nuevo modelo" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarCategoria">Categoría *</label>
+                        <input type="text" id="actualizarCategoria" placeholder="Nueva categoría" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarPrecio">Precio por Día (USD) *</label>
+                        <input type="number" id="actualizarPrecio" placeholder="Nuevo precio" step="0.01" min="0.01" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarUnidades">Unidades Disponibles *</label>
+                        <input type="number" id="actualizarUnidades" placeholder="Nuevas unidades" min="0" required />
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="actualizarDescripcion">Descripción (opcional)</label>
+                        <textarea id="actualizarDescripcion" rows="2" maxlength="255"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-warning">Actualizar Vehículo</button>
+            </form>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECCIÓN 4 — Eliminar vehículo
+        ═══════════════════════════════════════════ -->
+        <section class="card">
+            <h2>🗑️ Eliminar Vehículo</h2>
+            <div class="inline-form">
+                <input type="number" id="eliminarId" placeholder="ID del vehículo" min="1" />
+                <button onclick="eliminarVehiculo()" class="btn btn-danger">Eliminar</button>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECCIÓN 5 — Listar todos
+        ═══════════════════════════════════════════ -->
+        <section class="card">
+            <h2>📋 Listar Todos los Vehículos</h2>
+            <button onclick="listarTodos()" class="btn btn-primary">Obtener lista completa</button>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             SECCIÓN 6 — Consultas personalizadas
+        ═══════════════════════════════════════════ -->
+        <section class="card">
+            <h2>🔎 Consultas Personalizadas</h2>
+
+            <!-- Consulta a) Por categoría y unidades -->
+            <div class="query-block">
+                <h3>a) Por categoría con mínimo de unidades disponibles</h3>
+                <div class="inline-form">
+                    <input type="text" id="qCategoria" placeholder="Categoría (ej: SUV)" />
+                    <input type="number" id="qMinUnidades" placeholder="Mín. unidades" min="0" value="0" />
+                    <button onclick="buscarPorCategoria()" class="btn btn-secondary">Buscar</button>
+                </div>
+            </div>
+
+            <!-- Consulta b) Por rango de precio -->
+            <div class="query-block">
+                <h3>b) Por rango de precio por día (ordenado ASC)</h3>
+                <div class="inline-form">
+                    <input type="number" id="qPrecioMin" placeholder="Precio mínimo" step="0.01" min="0" />
+                    <input type="number" id="qPrecioMax" placeholder="Precio máximo" step="0.01" min="0" />
+                    <button onclick="buscarPorRangoPrecio()" class="btn btn-secondary">Buscar</button>
+                </div>
+            </div>
+
+            <!-- Consulta c) Búsqueda parcial por modelo -->
+            <div class="query-block">
+                <h3>c) Búsqueda parcial por modelo</h3>
+                <div class="inline-form">
+                    <input type="text" id="qModelo" placeholder="Parte del modelo (ej: toyota)" />
+                    <button onclick="buscarPorModelo()" class="btn btn-secondary">Buscar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════
+             RESPUESTA DEL SERVIDOR
+        ═══════════════════════════════════════════ -->
+        <section class="card respuesta-card">
+            <div class="respuesta-header">
+                <h2>📡 Respuesta del Servidor</h2>
+                <button onclick="limpiarRespuesta()" class="btn btn-small">Limpiar</button>
+            </div>
+            <pre id="respuesta">Aquí aparecerá la respuesta de la API...</pre>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>RentaFácil &copy; 2024 — Backend: Spring Boot + PostgreSQL | Frontend: HTML, CSS, JS</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
